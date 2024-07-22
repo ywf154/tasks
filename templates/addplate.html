@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}编辑任务 {% endblock %}
+
+{% block content %}
+    <div>
+        <table class="table table-bordered">
+            <tr>
+                <th>板块</th>
+                <th>负责人</th>
+                <th>种类--执行人--任务数量<a type="button" class="btn btn-danger" href="{% url 'list' %}">返回</a></th>
+            </tr>
+            {% for plate in plates %}
+                <tr>
+                    <td>{{ plate.name }}</td>
+                    <td>{{ plate.dutyUser }}</td>
+                    <td>
+                        {% for type in plate.type_set.all %}
+                            <ul>
+                                <li>
+                                    {{ type.name }}--
+                                    {% if type.doUser %}
+                                        {{ type.doUser }}
+                                    {% else %}
+                                        暂无执行人
+                                    {% endif %}
+                                    --
+                                    共 {{ type.task_set.count }} 个任务
+                                </li>
+                            </ul>
+
+                        {% endfor %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+
+        <form method="post" class="form-group">
+<h3>添加一个板块</h3>
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                {{ form.dutyUser.label_tag }}
+                {{ form.dutyUser }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">添加</button>
+            <a type="button" class="btn btn-danger" href="{% url 'list' %}">返回</a>
+        </form>
+    </div>
+
+    <style>
+        .form-control-wide {
+            width: 400px;
+            min-height: 80px;
+        }
+    </style>
+{% endblock %}

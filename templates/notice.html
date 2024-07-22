@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}通知添加 {% endblock %}
+
+{% block content %}
+
+
+{% if messages %} {{ messages }} {% endif %}
+
+    <div class="d-flex justify-content-center align-items-center vh-100">
+    
+        <form class="bg-light p-4 rounded shadow"  method="post">
+            <h3>添加通知</h3>
+            {% csrf_token %}
+            {{ form }}
+        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+            <a type="button" class="btn btn-primary" href="{% url 'list' %}">取消</a>
+            <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+
+

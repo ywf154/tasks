@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% block title %}任务列表 {% endblock %}
+{% block content %}
+    
+    {# -------添加任务的模态框-------------------------------------------------------------------- #}
+    <div class="modal fade" id="dlModal_submit" tabindex="-1"
+         aria-labelledby="dlModal_submitLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" class="form-group">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="dlModal_submitLabel">添加任务</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭
+                        </button>
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div>
+        <table class="table table-hover">
+            <tr>
+                <th><a href="{% url 'type' %}" class="btn btn-success">按种类添加</a></th>
+                <th>
+                    <a href="{% url 'allList' %}" class="btn btn-warning">任务</a>
+                    {# 添加任务的按钮----------------------------------------------------------------------------------- #}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#dlModal_submit">添加任务
+                    </button>
+                    <a type="button" class="btn btn-primary" href="{% url 'notice' %}">以通知形式添加</a>
+                </th>
+                <th style="height: 50px; vertical-align: middle;">截止时间</th>
+                <th style="height: 50px; vertical-align: middle;">剩余时间</th>
+                <th style="height: 50px; vertical-align: middle;">操作
+                    <a type="button" class="btn btn-light" href="{% url 'addplate' %}">板块</a>
+                    <a type="button" class="btn btn-light" href="/admin">后台管理</a>
+                </th>
+            </tr>
+
+        
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.type }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.end_time }}</td>
+                    <td>{{ task.left_time }}</td>
+                    <td>
+                        {# 完成按钮----------------------------------------------------------------------------------- #}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#fnModal{{ task.id }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                            </svg>
+                        </button>
+                        {# --------完成的模态框------------------------------------------------------------------- #}
+                        <div class="modal fade" id="fnModal{{ task.id }}" tabindex="-1"
+                             aria-labelledby="fnModal{{ task.id }}Label"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="fnModal{{ task.id }}Label">确定完成吗？</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        确定完成{{ task.name }}吗？
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭
+                                        </button>
+                                        <a type="button" class="btn btn-primary"
+                                           href="{% url 'finish' task.id %}">完成</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {# ------------------------------------------------------------------------------------- #}
+                        <a class="btn btn-warning" href="{% url 'edit' task.id %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-wrench" viewBox="0 0 16 16">
+                                <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
+                            </svg>
+                        </a>
+                        {# 删除----------------------------------------------------------------------------------- #}
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#dlModal{{ task.id }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                            </svg>
+                        </button>
+                        {# -------删除的模态框-------------------------------------------------------------------- #}
+                        <div class="modal fade" id="dlModal{{ task.id }}" tabindex="-1"
+                             aria-labelledby="dlModal{{ task.id }}Label"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="dlModal{{ task.id }}Label">确定删除吗？</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        确定删除{{ task.name }}吗？
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭
+                                        </button>
+                                        <a type="button" class="btn btn-primary"
+                                           href="{% url 'delete' task.id %}">删除</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {# ----------------------------------------------------------------------------------- #}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+

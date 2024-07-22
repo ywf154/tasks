@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}任务类型列表 {% endblock %}
+
+{% block content %}
+
+
+    <div class="d-flex justify-content-center mt-3">
+        <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal"
+                data-bs-target="#dlModal">
+            添加一个种类
+        </button>
+        <a type="button" class="btn btn-success" href="{% url 'list' %}">返回</a>
+    </div>
+
+    <div class="modal fade" id="dlModal" tabindex="-1"
+         aria-labelledby="dlModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="dlModalLabel">添加一个种类</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭
+                        </button>
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="d-flex justify-content-center flex-wrap mt-5">
+    {% for Plate in Plates %}
+    <div class="mb-4 mr-4" style="margin-right: 20px;">
+        <div class="card" style="width: 10rem;">
+            <h2>{{ Plate.name }}</h2>
+            {% for type in Plate.type_set.all %}
+            <div class="card-body">
+                <a href="{% url 'add' type.id %}" class="btn btn-primary">{{ type.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}
+
+

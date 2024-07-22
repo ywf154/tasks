@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}编辑任务 {% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+   
+        <form method="post" class="form-group">
+             <h2>修改:{{ task.name }}</h2>
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.type.label_tag }}
+                {{ form.type }}
+            </div>
+            <div class="mb-3">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                {{ form.end_time.label_tag }}
+                {{ form.end_time }}
+            </div>
+            <div class="mb-3">
+                {{ form.wx_notice_from.label_tag }}
+                {{ form.wx_notice_from }}
+            </div>
+            <div class="mb-3">
+                {{ form.to_who.label_tag }}
+                {{ form.to_who }}
+            </div>
+            <div class="mb-3">
+                {{ form.wx_notice_to.label_tag }}
+                {{ form.wx_notice_to }}
+            </div>
+            <button type="submit" class="btn btn-primary">修改</button>
+            <a type="button" class="btn btn-danger" href="{% url 'list' %}">返回</a>
+        </form>
+    </div>
+
+    <style>
+    .form-control-wide {
+        width: 400px;
+        min-height: 80px;
+    }
+    </style>
+{% endblock %}
